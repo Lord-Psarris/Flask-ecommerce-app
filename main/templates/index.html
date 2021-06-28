@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+
+
+<!-- body content -->
+{% block body %}
+<!-- products section -->
+	<section id="products" class="py-3">
+	    <div class="container">
+	        <div class="row">
+				{% for product in products %}
+	            <div id="{{ product['id'] }}" class="col-md-4 col-sm-10 offset-md-0 offset-sm-1 items">
+	                <div class="card">
+	                	<img class="card-img-top mx-auto" src="{{ product['path'] }}">
+	                    <div class="card-body">
+	                        <h6 id="names" class="mb-2">{{ product['name'] }}</h6>
+	                        <div class="d-flex flex-row mb-2">
+	                            <div class="text-muted">${{ product['price'] }}</div>
+	                            <div class="ml-auto">
+	                         </div>
+	                        </div>
+							{% if product['in_cart'] %}
+								<p id="orange">Product in cart</p>
+							{% else %}
+	                        	<button value="{{ product['id'] }}" class="btn w-100 rounded my-2 add_to_cart">Add to cart</button>
+							{% endif %}
+	                    </div>
+	                </div>
+	            </div>
+				{% endfor %}
+	        </div>
+	    </div>
+	</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+	var id_data = new FormData();
+
+	$('.add_to_cart').each(function() {
+		$( this ).on('click', function () {
+			var id = $( this ).val()
+
+			id_data.append('text', id)
+
+			$.ajax({
+				type: 'POST',
+				url: '/forms/add/to/cart',
+				data: id_data,
+				contentType: false,
+				cache: false,
+				processData: false,
+				success: function() {
+					location.reload();
+				},
+			});
+		})
+	})
+</script>
+{% endblock %}
